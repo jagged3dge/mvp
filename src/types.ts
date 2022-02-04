@@ -2,7 +2,8 @@ import { CreateOptions } from 'html-pdf'
 import { DocumentPDFOptions } from 'html-pdf-node'
 
 export type DocumentConfig = {
-  template: unknown
+  url?: string
+  template: string
   context: unknown
   type: 'buffer' | 'file'
   path?: string

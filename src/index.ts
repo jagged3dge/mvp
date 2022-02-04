@@ -10,7 +10,10 @@ import { create } from './html-pdf-node/create-pdf'
 
 async function main() {
   try {
-    const html = await readFile('src/test.html', { encoding: 'utf8' })
+    const templateDir = path.resolve(process.cwd(), 'templates', 'test')
+    const templateFile = path.resolve(templateDir, 'test.html')
+
+    // const html = await readFile(templateFile, { encoding: 'utf8' })
 
     const documentConfig: DocumentConfig = {
       type: 'file',
@@ -18,7 +21,7 @@ async function main() {
       context: {
         name: 'World',
       },
-      template: html,
+      template: templateFile,
     }
 
     const assetPath = 'src/assets'

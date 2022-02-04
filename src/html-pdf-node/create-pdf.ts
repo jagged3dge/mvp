@@ -1,7 +1,8 @@
 import * as Handlebars from 'handlebars'
-import { writeFile } from 'fs/promises'
+import { readFile, writeFile } from 'fs/promises'
 import * as HtmlToPdf from 'html-pdf-node'
 import { DocumentConfig, PuppeteerPdfOptions } from '../types'
+import * as path from 'path'
 
 // Handlebar helper support
 export const registerHelper = (
@@ -26,9 +27,24 @@ export const create = async (
       )
     }
 
-    const html = Handlebars.compile(document.template)(document.context)
+    const htmlFile = await readFile(document.template, { encoding: 'utf8' })
+    const html = Handlebars.compile(htmlFile)(document.context)
+    // console.log('html =', html)
+    // Write to a temp file
+    const tmpFile =
+      path.dirname(document.template) +
+      '/' +
+      path.basename(document.template, '.html') +
+      '.tmp.html'
 
-    const buffer = await HtmlToPdf.generatePdf({ content: html }, options)
+    console.log('tmpFile =', tmpFile)
+    await writeFile(tmpFile, html)
+
+    // const buffer = await HtmlToPdf.generatePdf({ content: html }, options)
+    const buffer = await HtmlToPdf.generatePdf(
+      { url: 'file://' + tmpFile },
+      options
+    )
 
     if (document.type === 'buffer') {
       return buffer
