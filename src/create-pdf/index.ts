@@ -1,8 +1,9 @@
 import * as Handlebars from 'handlebars'
 import { readFile, writeFile } from 'fs/promises'
-import * as HtmlToPdf from 'html-pdf-node'
-import { DocumentConfig, PuppeteerPdfOptions } from '../types'
 import * as path from 'path'
+import { DocumentConfig, generatePdf, PDFOptions } from './pdf'
+
+export { DocumentConfig, PDFOptions } from './pdf'
 
 // Handlebar helper support
 export const registerHelper = (
@@ -14,7 +15,7 @@ export const registerHelper = (
 
 export const create = async (
   document: DocumentConfig,
-  options?: PuppeteerPdfOptions
+  options?: PDFOptions
 ) => {
   try {
     if (!document || !document.template || !document.context) {
@@ -27,9 +28,11 @@ export const create = async (
       )
     }
 
-    const htmlFile = await readFile(document.template, { encoding: 'utf8' })
-    const html = Handlebars.compile(htmlFile)(document.context)
-    // console.log('html =', html)
+    const htmlTemplateContent = await readFile(document.template, {
+      encoding: 'utf8',
+    })
+    const html = Handlebars.compile(htmlTemplateContent)(document.context)
+
     // Write to a temp file
     const tmpFile =
       path.dirname(document.template) +
@@ -37,21 +40,22 @@ export const create = async (
       path.basename(document.template, '.html') +
       '.tmp.html'
 
-    console.log('tmpFile =', tmpFile)
+    // console.log('tmpFile =', tmpFile)
     await writeFile(tmpFile, html)
 
-    // const buffer = await HtmlToPdf.generatePdf({ content: html }, options)
-    const buffer = await HtmlToPdf.generatePdf(
-      { url: 'file://' + tmpFile },
-      options
-    )
+    const buffer = await generatePdf({ url: 'file://' + tmpFile }, options)
 
     if (document.type === 'buffer') {
       return buffer
     } else {
-      if (document.path) await writeFile(document.path, buffer)
+      if (document.path) {
+        const filename = path.resolve(document.path)
+        await writeFile(filename, buffer)
+        return { filename }
+      }
     }
   } catch (err) {
     console.log('[Puppeteer-create-pdf]', 'err =', err)
+    throw err
   }
 }

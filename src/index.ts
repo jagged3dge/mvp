@@ -1,19 +1,10 @@
-// import { create } from './html-pdf/create-pdf'
-import {
-  DocumentConfig,
-  PhantomJsPdfOptions,
-  PuppeteerPdfOptions,
-} from './types'
 import * as path from 'path'
-import { readFile } from 'fs/promises'
-import { create } from './html-pdf-node/create-pdf'
+import { create, DocumentConfig, PDFOptions } from './create-pdf'
 
 async function main() {
   try {
     const templateDir = path.resolve(process.cwd(), 'templates', 'test')
     const templateFile = path.resolve(templateDir, 'test.html')
-
-    // const html = await readFile(templateFile, { encoding: 'utf8' })
 
     const documentConfig: DocumentConfig = {
       type: 'file',
@@ -24,25 +15,10 @@ async function main() {
       template: templateFile,
     }
 
-    const assetPath = 'src/assets'
-    const basePath =
-      'file://' + path.resolve(assetPath).split(path.sep).join(path.posix.sep)
-    console.log('basePath =', basePath)
-
-    const phantomJsPdfOptions: PhantomJsPdfOptions = {
-      // format: 'A4',
-      type: 'pdf',
-      orientation: 'landscape',
-      border: '10mm',
-      base: basePath,
-      localUrlAccess: true,
-
-      phantomArgs: ['--ignore-ssl-errors=yes'],
-    }
-
-    const puppeteerPdfOptions: PuppeteerPdfOptions = {
+    const puppeteerPdfOptions: PDFOptions = {
       format: 'a4',
       margin: { top: '10mm', left: '10mm', right: '10mm', bottom: '10mm' },
+      landscape: true,
     }
 
     const result = await create(documentConfig, puppeteerPdfOptions)

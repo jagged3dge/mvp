@@ -8,12 +8,10 @@
   },
   "dependencies": {
     "handlebars": "^4.7.7",
-    "html-pdf": "^3.0.1",
     "html-pdf-node": "^1.0.8",
     "ts-node": "^10.4.0"
   },
   "devDependencies": {
-    "@types/html-pdf": "^3.0.0",
     "@types/node": "^17.0.14",
     "@typescript-eslint/eslint-plugin": "^5.10.2",
     "@typescript-eslint/parser": "^5.10.2",
