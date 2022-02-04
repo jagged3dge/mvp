@@ -15,17 +15,20 @@ async function main() {
       template: html,
     }
 
-    const assetPath = 'src/'
-    const basePath = 'file://' + (path.resolve(assetPath)).split(path.sep).join(path.posix.sep)
+    const assetPath = 'src/assets'
+    const basePath =
+      'file://' + path.resolve(assetPath).split(path.sep).join(path.posix.sep)
     console.log('basePath =', basePath)
 
     const pdfOptions: PdfOptions = {
-      format: 'A4',
+      // format: 'A4',
       type: 'pdf',
       orientation: 'landscape',
       border: '10mm',
       base: basePath,
       localUrlAccess: true,
+
+      phantomArgs: ['--ignore-ssl-errors=yes'],
     }
 
     await create(documentConfig)
