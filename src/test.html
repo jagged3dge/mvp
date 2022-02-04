@@ -1,0 +1,34 @@
+<html>
+  <head>
+    <style>
+      img {
+        position: relative;
+        height: 6rem;
+        width: 6rem;
+      }
+    </style>
+  </head>
+  <body>
+    <p>Hello, {{name}}!</p>
+
+    <a href="https://www.google.com">Anchor link</a>
+
+    <p>Local image: PNG</p>
+    <!-- src="file:///K:/Work/MYB-Kuwait--Abbas/myb-marketing-dashboard/mvp/src/assets/img/test.png" -->
+    <img
+      src="file://K:/Work/MYB-Kuwait--Abbas/myb-marketing-dashboard/mvp/src/assets/img/test.png"
+    />
+    <img src=img/test.png" />
+    <img src="./assets/img/test.png" />
+
+    <p>Local image: JPG</p>
+    <img
+      src="file://K:/Work/MYB-Kuwait--Abbas/myb-marketing-dashboard/mvp/src/assets/img/test-2.jpg"
+    />
+    <img src="img/test-2.jpg" />
+    <img src="./assets/img/test-2.jpg" />
+
+    <p>Remote image</p>
+    <img src="https://duckduckgo.com/assets/logo_header.alt.v108.svg" />
+  </body>
+</html>
