@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon src/index.ts --watch ./src --ext ts,html,json"
+    "start": "nodemon src/index.ts --watch ./src --watch ./templates/test.html --ext ts,html,json"
   },
   "dependencies": {
     "handlebars": "^4.7.7",
