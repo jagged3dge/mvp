@@ -1,9 +1,9 @@
-import * as Handlebars from 'handlebars'
 import { readFile, writeFile } from 'fs/promises'
-import * as path from 'path'
-import { DocumentConfig, generatePdf, PDFOptions } from './pdf'
-
-export { DocumentConfig, PDFOptions } from './pdf'
+import * as Handlebars from 'handlebars'
+import { tmpdir } from 'os'
+import { basename, resolve } from 'path'
+import { generatePdf } from './pdf'
+import { DocumentConfig, PDFOptions } from './types'
 
 // Handlebar helper support
 export const registerHelper = (
@@ -13,7 +13,7 @@ export const registerHelper = (
   Handlebars.registerHelper(conditionName, callback)
 }
 
-export const create = async (
+export const createPDF = async (
   document: DocumentConfig,
   options?: PDFOptions
 ) => {
@@ -34,13 +34,12 @@ export const create = async (
     const html = Handlebars.compile(htmlTemplateContent)(document.context)
 
     // Write to a temp file
-    const tmpFile =
-      path.dirname(document.template) +
-      '/' +
-      path.basename(document.template, '.html') +
-      '.tmp.html'
+    const tmpFile = resolve(
+      tmpdir(),
+      basename(document.template, '.html') + '.tmp.html'
+    )
 
-    // console.log('tmpFile =', tmpFile)
+    console.log('tmpFile =', tmpFile)
     await writeFile(tmpFile, html)
 
     const buffer = await generatePdf({ url: 'file://' + tmpFile }, options)
@@ -49,7 +48,7 @@ export const create = async (
       return buffer
     } else {
       if (document.path) {
-        const filename = path.resolve(document.path)
+        const filename = resolve(document.path)
         await writeFile(filename, buffer)
         return { filename }
       }

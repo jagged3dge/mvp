@@ -1,5 +1,6 @@
 import * as path from 'path'
-import { create, DocumentConfig, PDFOptions } from './create-pdf'
+import { createPDF } from './create-pdf'
+import { DocumentConfig, PDFOptions } from './create-pdf/types'
 
 async function main() {
   try {
@@ -21,8 +22,8 @@ async function main() {
       landscape: true,
     }
 
-    const result = await create(documentConfig, puppeteerPdfOptions)
-    console.log('PDF Created', result)
+    const result = await createPDF(documentConfig, puppeteerPdfOptions)
+    console.log('PDF created:', result)
   } catch (err) {
     console.log('err =', err)
   }
